@@ -1,0 +1,40 @@
+buildscript {
+    ext {
+        lombok_version = '1.18.24'
+        log4j2_version = '2.18.0'
+        junit5_version = '5.9.0'
+        kafkaStreams_version = '3.2.1'
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    version = '0.1-SNAPSHOT'
+
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+
+    repositories {
+        mavenCentral()
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    dependencies {
+        implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: "${log4j2_version}"
+        implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: "${log4j2_version}"
+        implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: "${log4j2_version}"
+
+        compileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombok_version}"
+        annotationProcessor group: 'org.projectlombok', name: 'lombok', version: "${lombok_version}"
+
+        testCompileOnly group: 'org.projectlombok', name: 'lombok', version: "${lombok_version}"
+        testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: "${lombok_version}"
+        testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: "${junit5_version}"
+        testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: "${junit5_version}"
+    }
+
+}
