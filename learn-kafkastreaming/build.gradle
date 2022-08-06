@@ -1,0 +1,6 @@
+
+dependencies {
+    implementation group: 'org.apache.kafka', name: 'kafka-streams', version: "${kafkaStreams_version}"
+    testImplementation group: 'org.apache.kafka', name: 'kafka-streams-test-utils', version: "${kafkaStreams_version}"
+
+}
