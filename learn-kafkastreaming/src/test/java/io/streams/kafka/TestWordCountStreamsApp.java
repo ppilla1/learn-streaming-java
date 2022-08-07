@@ -66,16 +66,20 @@ public class TestWordCountStreamsApp {
     @Test
     public void testCountStreamTopology() {
         inputTopic.pipeInput(null, "Hello World");
+        inputTopic.pipeInput(null, "world");
 
         KeyValueStore<String, Long> store = testDriver.getKeyValueStore(storename);
-        assertEquals(store.get("hello"), 1L);
-        assertEquals(store.get("world"), 1L);
+        assertEquals(1L, store.get("hello"));
+        assertEquals(2L, store.get("world"));
 
         List<KeyValue<String, Long>> output = outputTopic.readKeyValuesToList();
-        assertEquals(2, output.size());
-        assertEquals(output.get(0).key, "hello");
-        assertEquals(output.get(0).value, 1L);
-        assertEquals(output.get(0).key, "hello");
-        assertEquals(output.get(0).value, 1L);
+        assertEquals(3, output.size());
+        assertEquals( "hello", output.get(0).key);
+        assertEquals( 1L, output.get(0).value);
+        assertEquals( "world", output.get(1).key);
+        assertEquals(1L, output.get(1).value);
+        assertEquals( "world", output.get(2).key);
+        assertEquals(2L, output.get(2).value);
+
     }
 }
