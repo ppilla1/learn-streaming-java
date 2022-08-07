@@ -47,10 +47,10 @@ public class ReferenceKafkaStreamsUnitTest {
         topology.addSink("sinkProcessor", "result-topic", "aggregator");
 
         // setup test driver
-        Properties props = new Properties();
-        props.setProperty(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
-        props.setProperty(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.Long().getClass().getName());
-        testDriver = new TopologyTestDriver(topology, props);
+        Properties config = new Properties();
+        config.setProperty(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+        config.setProperty(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.Long().getClass().getName());
+        testDriver = new TopologyTestDriver(topology, config);
 
         // setup test topics
         inputTopic = testDriver.createInputTopic("input-topic", stringSerde.serializer(), longSerde.serializer());
