@@ -24,7 +24,7 @@ public class TestWordCountStreamsApp {
     private TopologyTestDriver testDriver;
     private TestInputTopic<String, String> inputTopic;
     private TestOutputTopic<String, Long> outputTopic;
-    private final String STORENAME = "Counts";
+    private String storename;
 
     @BeforeEach
     public void setup() {
@@ -35,27 +35,25 @@ public class TestWordCountStreamsApp {
         Properties config = new Properties();
         try (InputStream ins = this.getClass().getResourceAsStream("/application.properties")){
             config.load(ins);
+            storename = config.getProperty("application.storename");
         } catch (IOException e) {
             log.error("{}\n", e.getMessage(), e);
         }
         config.setProperty(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, stringSerde.getClass().getName());
         config.setProperty(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG,stringSerde.getClass().getName());
 
-        String inboudtopic = "wordcount-input";
-        String outboundtopic = "wordcount-output";
-
         WordCountStreamsApp streamApp = WordCountStreamsApp.builder()
-                .inboundTopic(inboudtopic)
-                .outboundTopic(outboundtopic)
-                .storeName(STORENAME)
+                .inboundTopic(config.getProperty("topic.inbound"))
+                .outboundTopic(config.getProperty("topic.outbound"))
+                .storeName(storename)
                 .build();
 
         Topology topology = streamApp.countStreamTopology();
 
         testDriver = new TopologyTestDriver(topology, config);
 
-        inputTopic = testDriver.createInputTopic(inboudtopic, stringSerde.serializer(), stringSerde.serializer());
-        outputTopic = testDriver.createOutputTopic(outboundtopic, stringSerde.deserializer(), longSerde.deserializer());
+        inputTopic = testDriver.createInputTopic(config.getProperty("topic.inbound"), stringSerde.serializer(), stringSerde.serializer());
+        outputTopic = testDriver.createOutputTopic(config.getProperty("topic.outbound"), stringSerde.deserializer(), longSerde.deserializer());
 
         log.info("Stream app topology -> {}", topology.toString());
     }
@@ -69,7 +67,7 @@ public class TestWordCountStreamsApp {
     public void testCountStreamTopology() {
         inputTopic.pipeInput(null, "Hello World");
 
-        KeyValueStore<String, Long> store = testDriver.getKeyValueStore(STORENAME);
+        KeyValueStore<String, Long> store = testDriver.getKeyValueStore(storename);
         assertEquals(store.get("hello"), 1L);
         assertEquals(store.get("world"), 1L);
 
