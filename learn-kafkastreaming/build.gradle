@@ -1,6 +1,18 @@
 
+jar {
+    manifest {
+        attributes "Main-Class": "io.streams.kafka.Main"
+    }
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
 dependencies {
     implementation group: 'org.apache.kafka', name: 'kafka-streams', version: "${kafkaStreams_version}"
     implementation group: 'org.apache.kafka', name: 'kafka-clients', version: "${kafkaStreams_version}"
     testImplementation group: 'org.apache.kafka', name: 'kafka-streams-test-utils', version: "${kafkaStreams_version}"
 }
+
