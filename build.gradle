@@ -4,6 +4,7 @@ buildscript {
         log4j2_version = '2.18.0'
         junit5_version = '5.9.0'
         kafkaStreams_version = '3.2.1'
+        vavr_version = '0.10.4'
     }
 }
 
@@ -24,6 +25,7 @@ subprojects {
     }
 
     dependencies {
+        implementation group: 'io.vavr', name: 'vavr', version: "${vavr_version}"
         implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: "${log4j2_version}"
         implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: "${log4j2_version}"
         implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: "${log4j2_version}"
