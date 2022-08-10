@@ -30,8 +30,8 @@ public class ReferenceKafkaStreamsUnitTest {
     private TestOutputTopic<String, Long> outputTopic;
     private KeyValueStore<String, Long> store;
 
-    private Serde<String> stringSerde = new Serdes.StringSerde();
-    private Serde<Long> longSerde = new Serdes.LongSerde();
+    private final Serde<String> stringSerde = new Serdes.StringSerde();
+    private final Serde<Long> longSerde = new Serdes.LongSerde();
 
     @BeforeEach
     public void setup() {
@@ -120,7 +120,7 @@ public class ReferenceKafkaStreamsUnitTest {
         assertTrue(outputTopic.isEmpty());
     }
 
-    public class CustomMaxAggregatorSupplier implements ProcessorSupplier<String, Long, String, Long> {
+    public static class CustomMaxAggregatorSupplier implements ProcessorSupplier<String, Long, String, Long> {
 
         @Override
         public Processor<String, Long, String, Long> get() {
@@ -129,7 +129,7 @@ public class ReferenceKafkaStreamsUnitTest {
 
     }
 
-    public class CustomMaxAggregator implements Processor<String, Long, String, Long> {
+    public static class CustomMaxAggregator implements Processor<String, Long, String, Long> {
         ProcessorContext<String, Long> context;
         private KeyValueStore<String, Long> store;
 
@@ -147,7 +147,7 @@ public class ReferenceKafkaStreamsUnitTest {
             this.context = context;
             context.schedule(Duration.ofSeconds(60), PunctuationType.WALL_CLOCK_TIME, time -> flushStore());
             context.schedule(Duration.ofSeconds(10), PunctuationType.STREAM_TIME, time -> flushStore());
-            store = (KeyValueStore<String, Long>) context.getStateStore("aggStore");
+            store = context.getStateStore("aggStore");
         }
 
         @Override
